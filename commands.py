@@ -15,6 +15,21 @@ import os
 # You always need to import ranger.api.commands here to get the Command class:
 from ranger.api.commands import Command
 
+# Removes given directory from the system
+class rmdir(Command):
+    """:rmdir <dirname>
+    Remove a directory with the name <dirname>
+    """
+    def execute(self):
+        dirname = os.path.join(self.fm.thisdir.path, os.path.expanduser(self.rest(1)))
+        if os.path.lexists(dirname):
+            os.rmdir(dirname)
+        else:
+            self.fm.notify("file/directory exists!", bad=True)
+
+    def tab(self, tabnum):
+        return self._tab_directory_content()
+
 
 # Any class that is a subclass of "Command" will be integrated into ranger as a
 # command.  Try typing ":my_edit<ENTER>" in ranger!
