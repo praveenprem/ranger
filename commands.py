@@ -6,7 +6,6 @@
 
 # A simple command for demonstration purposes follows.
 # -----------------------------------------------------------------------------
-
 from __future__ import (absolute_import, division, print_function)
 
 # You can import any python module as needed.
@@ -14,6 +13,8 @@ import os
 
 # You always need to import ranger.api.commands here to get the Command class:
 from ranger.api.commands import Command
+
+from project_conf import conf
 
 # Removes given directory from the system
 class rmdir(Command):
@@ -30,6 +31,29 @@ class rmdir(Command):
     def tab(self, tabnum):
         return self._tab_directory_content()
 
+# Changes the Ranger active directory to the SDS-Toolkit directory
+class toolkit(Command):
+    def execute(self):
+        dirname = conf.get('toolkit')
+        if os.path.lexists(dirname):
+            self.fm.cd(dirname)
+        else:
+            self.fm.notify("%s not set!" % dirname, bad=True)
+
+    def tab(self, tabnum):
+        return self._tab_directory_content()
+
+# Changes the Ranger active directory to the Service Deployments directory
+class service_deployment(Command):
+    def execute(self):
+        dirname = os.getenv('SERVICE_DEPLOYMENTS')
+        if os.path.lexists(dirname):
+            self.fm.cd(dirname)
+        else:
+            self.fm.notify("SERVICE_DEPLOYMENTS not set!", bad=True)
+
+    def tab(self, tabnum):
+        return self._tab_directory_content()
 
 # Any class that is a subclass of "Command" will be integrated into ranger as a
 # command.  Try typing ":my_edit<ENTER>" in ranger!
